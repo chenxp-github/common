@@ -42,11 +42,11 @@ public:
     static status_t IsCombBox(HWND hwnd);
     static status_t GetMultiFileNames(HWND hwnd,CFileBase *file,const wchar_t *filter);
     static status_t CreateMenuBar(HWND hwnd,CMenu *menu);
-    static status_t GetSaveFileName(HWND hwnd, CFileBase *file,const wchar_t *filter);
+    static status_t GetSaveFileName(HWND hwnd, CFileBase *file,const wchar_t *filter,const wchar_t *init_dir=NULL);
     static status_t GetScreenRes(int32_t *width,int32_t *height);
     static status_t GetSelfPath(CMem *mem);
     static status_t FolderSelect(HWND hp,CFileBase *file);
-    static status_t GetAFileName(HWND hp,CFileBase *file,const wchar_t *filter);
+    static status_t GetAFileName(HWND hp,CFileBase *file,const wchar_t *filter,const wchar_t *init_dir=NULL);
     static status_t ChooseColor(HWND hp,COLORREF *color);
     static status_t ChooseFont(HWND hp,LOGFONTW *lf,COLORREF *color);
     static HRESULT CreateLink(const wchar_t *lpszPathObj,const wchar_t* lpszPathLink,const wchar_t* WorkDir);

@@ -82,7 +82,7 @@ status_t CSQLite3Stmt::BindText(int index, const char  *text, int encoding)
 status_t CSQLite3Stmt::BindText(int index,CMem *text, int encoding)
 {
     ASSERT(text);
-    LOCAL_MEM(tmp);
+    AUTO_LOCAL_MEM(tmp,text->StrLen());
     CEncoder::EncodingConvert(encoding,ENCODING_UTF8,text,&tmp);
     return sqlite3_bind_text(this->mStmt,index,tmp.CStr(),tmp.StrLen(),NULL) == SQLITE_OK;
 }

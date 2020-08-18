@@ -42,7 +42,7 @@ typedef struct{
 
 class CWnd{
 public:
-    WEAK_REF_ID_DEFINE();
+    WEAK_REF_DEFINE();
 
     HMENU id;
     HWND hwnd;

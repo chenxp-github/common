@@ -365,7 +365,7 @@ public:
 
 class CxImage{
 public:
-    WEAK_REF_ID_DEFINE();
+    WEAK_REF_DEFINE();
 public:
     void*               pDib; //contains the header, the palette, the pixels
     BITMAPINFOHEADER    head; //standard header
@@ -381,6 +381,7 @@ public:
     HANDLE CopyToHandle();
     bool CreateFromHANDLE(HANDLE hMem);
     HBITMAP MakeBitmap(HDC hdc);
+    bool CreateFromHdc(HDC hdc);
     bool CreateFromHBITMAP(HBITMAP hbmp, HPALETTE hpal);
     BOOL CreateFromHICON(HICON hico);
     long Draw(HDC hdc, const RECT& rect, RECT* pClipRect, bool bSmooth);

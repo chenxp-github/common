@@ -31,7 +31,7 @@ CWnd::~CWnd()
 }
 status_t CWnd::InitBasic()
 {
-    WEAK_REF_ID_CLEAR();
+    WEAK_REF_CLEAR();
 
     this->hwnd = NULL;
     this->is_attached = FALSE;
@@ -53,7 +53,7 @@ status_t CWnd::InitBasic()
 status_t CWnd::Init()
 {
     this->InitBasic();
-    WEAK_REF_ID_INIT();
+    
 
     NEW(this->wnd_create,WndCreate);
     memset(this->wnd_create,0,sizeof(WndCreate));
@@ -74,6 +74,7 @@ status_t CWnd::Init()
 }
 status_t CWnd::Destroy()
 {
+    WEAK_REF_DESTROY();
     if(this->hfont)
     {
         DeleteObject(this->hfont);

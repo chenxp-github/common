@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-status_t CWinMisc::GetAFileName(HWND hp,CFileBase *file,const wchar_t *filter)
+status_t CWinMisc::GetAFileName(HWND hp,CFileBase *file,const wchar_t *filter, const wchar_t *init_dir)
 {
     ASSERT(file && filter);
     
@@ -31,7 +31,7 @@ status_t CWinMisc::GetAFileName(HWND hp,CFileBase *file,const wchar_t *filter)
     ofn.nMaxFile = sizeof(szFile);
     ofn.lpstrFileTitle = NULL;
     ofn.nMaxFileTitle = 0;
-    ofn.lpstrInitialDir = NULL;
+    ofn.lpstrInitialDir = init_dir;
     ofn.Flags = 0 ;
     
 	wchar_t oldCd[MAX_PATH];
@@ -351,7 +351,7 @@ status_t CWinMisc::GetScreenRes(int32_t *width, int32_t *height)
     return OK;
 }
 
-status_t CWinMisc::GetSaveFileName(HWND hwnd, CFileBase *file,const wchar_t *filter)
+status_t CWinMisc::GetSaveFileName(HWND hwnd, CFileBase *file,const wchar_t *filter,const wchar_t *init_dir)
 {
     ASSERT(file);
     
@@ -374,7 +374,7 @@ status_t CWinMisc::GetSaveFileName(HWND hwnd, CFileBase *file,const wchar_t *fil
     ofn.nMaxFile = sizeof(szFile);
     ofn.lpstrFileTitle = NULL;
     ofn.nMaxFileTitle = 0;
-    ofn.lpstrInitialDir = NULL;
+    ofn.lpstrInitialDir = init_dir;
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
 	wchar_t oldCd[MAX_PATH];

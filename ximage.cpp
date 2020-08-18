@@ -9255,6 +9255,15 @@ void CxImage::InitTextInfo( CXTEXTINFO *txt )
     return;
 }
 
+bool CxImage::CreateFromHdc(HDC hdc)
+{
+    HBITMAP hbmp = MakeBitmap(hdc);
+    ASSERT(hbmp);
+    CreateFromHBITMAP(hbmp,0);
+    ::DeleteObject(hbmp);
+    return OK;
+}
+
 #if CXIMAGE_SUPPORT_LAYERS
 
 long CxImage::LayerDrawAll(HDC hdc, const RECT& rect, RECT* pClipRect, bool bSmooth)
@@ -9282,27 +9291,29 @@ long CxImage::LayerDrawAll(HDC hdc, long x, long y, long cx, long cy, RECT* pCli
 //////////////////////////////////////////////////////////////
 CxImage::CxImage()
 {
-    WEAK_REF_ID_CLEAR();
+    WEAK_REF_CLEAR();
     this->InitBasic();
-    WEAK_REF_ID_INIT();
+    
 }
 CxImage::~CxImage()
 {
     this->DestroyAll();
-    WEAK_REF_ID_CLEAR();
+    WEAK_REF_DESTROY();
 }
 
 CxImage::CxImage(DWORD dwWidth, DWORD dwHeight, DWORD wBpp, DWORD imagetype)
 {
-    WEAK_REF_ID_INIT();
+    WEAK_REF_CLEAR();    
     this->StartUp(imagetype);
     this->Create(dwWidth,dwHeight,wBpp,imagetype);
+    
 }
 CxImage::CxImage(CxImage *src, BOOL copypixels, BOOL copyselection, BOOL copyalpha)
 {   
-    WEAK_REF_ID_INIT();
+    WEAK_REF_CLEAR();   
     StartUp(src->GetType());
     Copy(src,copypixels,copyselection,copyalpha);
+    
 }
 
 CxImage::CxImage(const CxImage &img)
@@ -9318,6 +9329,7 @@ CxImage& CxImage::operator=(const CxImage &img)
 
 int CxImage::InitBasic()
 {
+    WEAK_REF_CLEAR();
     this->pDib = 0; 
     this->pSelection = 0;
     this->pAlpha = 0;
@@ -9331,12 +9343,12 @@ int CxImage::Init()
     this->InitBasic();
     this->info.Init();
     this->StartUp(CXIMAGE_FORMAT_UNKNOWN);
+    
     return OK;
 }
 int CxImage::Destroy()
 {
-    long n; 
-
+    long n;     
     if (info.pGhost==NULL)
     {
         if (ppLayers) 
@@ -9714,9 +9726,11 @@ int CxImage::Clear(BYTE bval)
 int CxImage::Transfer(CxImage *from, BOOL bTransferFrames)
 {
     ASSERT(from);
-
+	
+	SAVE_WEAK_REF_ID(*this,w);
     if (!Destroy())
         return ERROR;
+	RESTORE_WEAK_REF_ID(*this,w);
 
     memcpy(&head,&from->head,sizeof(BITMAPINFOHEADER));
     this->info.Copy(&from->info);
@@ -11226,6 +11240,7 @@ void CxImage::SetTransColor(RGBQUAD rgb)
 
 int CxImage::DestroyAll()
 {
+    WEAK_REF_DESTROY();
     this->DestroyFrames();
     this->Destroy();
     return OK;

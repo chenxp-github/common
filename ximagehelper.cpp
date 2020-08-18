@@ -13,9 +13,9 @@ status_t CxImageHelper::LoadImage(CFileBase *file, CxImage *out)
 {
     ASSERT(file && out);
     
-    int old_weak_ref_id = out->__weak_ref_id;
+    SAVE_WEAK_REF_ID(*out,w);
     out->DestroyAll();
-    out->__weak_ref_id = old_weak_ref_id;
+	RESTORE_WEAK_REF_ID(*out,w);
 
     int32_t type = CxImage::GetTypeByFileHeader(file);
     if(type == CXIMAGE_FORMAT_BMP)
@@ -57,7 +57,6 @@ status_t CxImageHelper::LoadImage(CFileBase *file, CxImage *out)
             return OK;
         }
     }
-
     return ERROR;
 }
 
@@ -257,6 +256,43 @@ status_t CxImageHelper::DrawString(CxImage *img, LOGFONTW *log_font, CRect *layo
     return OK;
 }
 
+status_t CxImageHelper::CreateImageFromHdc(
+		CxImage *img,
+		int nXOriginDest, int nYOriginDest, 
+		int nWidthDest, int nHeightDest, 
+		HDC hdcSrc, 
+		int nXOriginSrc, int nYOriginSrc, 
+		int nWidthSrc, int nHeightSrc)
+{
+	ASSERT(img);
+	ASSERT(nWidthDest > 0 && nHeightDest > 0);
+	ASSERT(nWidthSrc > 0 && nHeightSrc > 0);
+
+	HBITMAP hbmWnd = ::CreateCompatibleBitmap(hdcSrc, nWidthSrc, nHeightSrc);
+	ASSERT(hbmWnd);
+	
+	HDC hdcMem = ::CreateCompatibleDC(hdcSrc);
+	ASSERT(hdcMem);
+
+	::SelectObject(hdcMem, hbmWnd);
+	::StretchBlt(hdcMem, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest, 
+		hdcSrc, nXOriginSrc, nYOriginSrc,nWidthSrc,nHeightSrc,SRCCOPY);
+
+
+	SAVE_WEAK_REF_ID(*img,w);
+	img->DestroyAll();
+	img->Create(nWidthDest,nHeightDest,24,CXIMAGE_FORMAT_BMP);
+	RESTORE_WEAK_REF_ID(*img,w);
+
+	::GetDIBits(hdcMem, hbmWnd, 0,nHeightDest,
+		img->GetBits(0),
+		(LPBITMAPINFO)img->pDib,
+		DIB_RGB_COLORS);
+
+	::DeleteDC(hdcMem);
+	::DeleteObject(hbmWnd);
+	return OK;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 #endif
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -412,9 +448,11 @@ float CxImageHelper::CalcuSimilarity(CxImage *img1, CxImage *img2, int threshold
     {
         if(w1 != diff_img->GetWidth() || h1 != diff_img->GetHeight())
         {
+            SAVE_WEAK_REF_ID(*diff_img,w);
             diff_img->DestroyAll();
             diff_img->Init();
             diff_img->Create(w1,h1,24,CXIMAGE_FORMAT_BMP);
+            RESTORE_WEAK_REF_ID(*diff_img,w);
         }
     }
     
