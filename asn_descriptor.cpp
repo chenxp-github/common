@@ -113,11 +113,8 @@ int CAsnDescriptor::GetAsnChoicePresent(const void *choice_ptr)
     return p;
 }
 
-int CAsnDescriptor::GetAsnChoiceMemberIndex(const void *choice_ptr)
+int CAsnDescriptor::GetAsnChoiceMemberIndex(int present)
 {
-    RASSERT(choice_ptr,-1);
-    RASSERT(this->IsAsnChoice(),-1);
-    int present = this->GetAsnChoicePresent(choice_ptr);
     RASSERT(present > 0,-1);
 
     asn_CHOICE_specifics_t *spec = (asn_CHOICE_specifics_t*)m_def->specifics;
@@ -129,6 +126,14 @@ int CAsnDescriptor::GetAsnChoiceMemberIndex(const void *choice_ptr)
             return spec->tag2el[i].el_no;
     }
     return -1;
+}
+
+int CAsnDescriptor::GetAsnChoiceMemberIndex(const void *choice_ptr)
+{
+    RASSERT(choice_ptr,-1);
+    RASSERT(this->IsAsnChoice(),-1);
+    int present = this->GetAsnChoicePresent(choice_ptr);
+    return this->GetAsnChoiceMemberIndex(present);
 }
 
 bool CAsnDescriptor::IsAsnSequence()
@@ -183,4 +188,22 @@ status_t CAsnDescriptor::GetAsnEnumeratedValue(long enum_value,CMem *out)
 bool CAsnDescriptor::IsAsnIA5String()
 {
      return m_def->op == &asn_OP_IA5String;
+}
+
+asn_CHOICE_specifics_t *CAsnDescriptor::GetChoiceSpecifics()
+{
+    ASSERT(this->IsAsnChoice());
+    return (asn_CHOICE_specifics_t*)m_def->specifics;
+}
+
+asn_SEQUENCE_specifics_t *CAsnDescriptor::GetSequenceSpecifics()
+{
+    ASSERT(this->IsAsnSequence());
+    return (asn_SEQUENCE_specifics_t*)m_def->specifics;
+}
+
+asn_SET_OF_specifics_t *CAsnDescriptor::GetSetOfSpecifics()
+{
+    ASSERT(this->IsAsnSequenceOf());
+    return (asn_SET_OF_specifics_t*)m_def->specifics;
 }

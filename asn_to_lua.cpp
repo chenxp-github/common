@@ -13,6 +13,17 @@ int asn_to_lua_alloc_id()
     return id++;
 }
 
+#define SET_PENDING_COMMA()\
+(*pending_comma)=1\
+
+#define PUT_COMMA() do{\
+if(*pending_comma)\
+{\
+    *pending_comma=0;\
+    out->Putc(',');\
+    out->Eol();\
+}}while(0)\
+
 static status_t asn_choice_to_lua(ASN_TO_LUA_PARAM_DEF)
 {
     ASSERT(obj_ptr);
@@ -21,7 +32,7 @@ static status_t asn_choice_to_lua(ASN_TO_LUA_PARAM_DEF)
     out->Eol();
     out->IncLogLevel(1);    
    
-    out->Log("present = %d,",descriptor->GetAsnChoicePresent(obj_ptr));
+    out->Log("[\"present\"] = %d,",descriptor->GetAsnChoicePresent(obj_ptr));
 
     int index = descriptor->GetAsnChoiceMemberIndex(obj_ptr);
     if(index >= 0)
@@ -30,21 +41,16 @@ static status_t asn_choice_to_lua(ASN_TO_LUA_PARAM_DEF)
         descriptor->GetMember(index,&m);
         CAsnDescriptor d;
         m.GetDescriptor(&d);
-        out->Log(NULL);
-
-        LOCAL_MEM(name);
-        m.GetVarName(&name);
-        out->Printf("%s = ",name.CStr());
-        if(!asn_to_lua(&d,&m,(char*)obj_ptr+m.GetOffset(),level+1,out))
+        if(!asn_to_lua(&d,&m,(char*)obj_ptr+m.GetOffset(),level+1,out,pending_comma))
         {
             return ERROR;
         }       
-        out->Eol();
     }
     
     out->IncLogLevel(-1);    
-    out->Log("},");
-    
+    out->Eol();out->Tab();
+    out->Printf("}");
+    SET_PENDING_COMMA();   
     return OK;
 }
 
@@ -62,19 +68,16 @@ static status_t asn_sequence_to_lua(ASN_TO_LUA_PARAM_DEF)
         descriptor->GetMember(i,&m);
         CAsnDescriptor d;
         m.GetDescriptor(&d);        
-        out->Log(NULL);
-        LOCAL_MEM(name);
-        m.GetVarName(&name);
-        out->Printf("%s = ",name.CStr());
-        if(!asn_to_lua(&d,&m,(char*)obj_ptr+m.GetOffset(),level+1,out))
+        if(!asn_to_lua(&d,&m,(char*)obj_ptr+m.GetOffset(),level+1,out,pending_comma))
         {
             return ERROR;
         }
-        out->Eol();
     }
 
-    out->IncLogLevel(-1);   
-    out->Log("},");  
+    out->IncLogLevel(-1);  
+    out->Eol();out->Tab();
+    out->Printf("}"); 
+    SET_PENDING_COMMA();
     return OK;
 }
 
@@ -83,7 +86,8 @@ static status_t asn_integer_to_lua(ASN_TO_LUA_PARAM_DEF)
     ASSERT(obj_ptr);
     long *p = (long*)obj_ptr;
     ASSERT(p);
-    out->Printf("%d,",*p);
+    out->Printf("%d",*p);
+    SET_PENDING_COMMA();
     return OK;
 }
 
@@ -97,7 +101,8 @@ static status_t asn_octet_string_to_lua(ASN_TO_LUA_PARAM_DEF)
     {
         out->Printf("%02x",str->buf[i]);
     }
-    out->Printf("\"),");
+    out->Printf("\")");
+    SET_PENDING_COMMA();
     return OK;
 }
 
@@ -111,7 +116,8 @@ static status_t asn_ia5_string_to_lua(ASN_TO_LUA_PARAM_DEF)
     {
         out->Printf("%02x",str->buf[i]);
     }
-    out->Printf("\"),");
+    out->Printf("\")");
+    SET_PENDING_COMMA();
     return OK;
 }
 
@@ -121,7 +127,8 @@ static status_t asn_enumerated_to_lua(ASN_TO_LUA_PARAM_DEF)
     long *p = (long*)obj_ptr;
     LOCAL_MEM(mem);
     descriptor->GetAsnEnumeratedValue(*p,&mem);
-    out->Printf("%d,",*p);
+    out->Printf("%d",*p);
+    SET_PENDING_COMMA();
     return OK;
 }
 
@@ -137,7 +144,8 @@ static status_t asn_bit_string_to_lua(ASN_TO_LUA_PARAM_DEF)
         BIT_STRING_GET_BIT(*str,i,v);
         out->Printf("%d",v);
     }
-    out->Printf("\"),");
+    out->Printf("\")");
+    SET_PENDING_COMMA();
     return OK;
 }
 
@@ -160,20 +168,21 @@ static status_t asn_sequence_of_to_lua(ASN_TO_LUA_PARAM_DEF)
 
     for(int i = 0; i < list->count; i++)
     {
-        out->Tab();
-        if(!asn_to_lua(&d,&m,(char*)list->array[i],level+1,out))
+        if(!asn_to_lua(&d,&m,(char*)list->array[i],level+1,out,pending_comma))
             return ERROR;
     }
-    out->IncLogLevel(-1);   
-    out->Log("},");  
+    out->IncLogLevel(-1);
+    out->Eol();out->Tab();
+    out->Printf("}");  
+    SET_PENDING_COMMA();
     return OK;
 }
 
 
-#define CALL_LIST descriptor,member,obj_ptr,level+1,out
+#define CALL_LIST descriptor,member,obj_ptr,level+1,out,pending_comma
 status_t asn_to_lua(ASN_TO_LUA_PARAM_DEF)
 {
-    ASSERT(descriptor && out && obj_ptr);
+    ASSERT(descriptor && out && obj_ptr && pending_comma);
     ASSERT(descriptor->Get());
 
     if(member && member->IsOptional())
@@ -181,10 +190,16 @@ status_t asn_to_lua(ASN_TO_LUA_PARAM_DEF)
         ASSERT(member->IsPointer());
         void **p = (void**)obj_ptr;        
         obj_ptr = *p;
-        if(!obj_ptr)
-        {
-            out->Printf("nil,");
-            return OK;
+        if(!obj_ptr){return OK;}
+    }
+    
+    if(member)
+    {        
+        PUT_COMMA();
+        out->Tab();
+        if(member->GetName()[0])
+        {            
+            out->Printf("[\"%s\"] = ",member->GetName());
         }
     }    
 

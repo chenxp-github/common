@@ -101,6 +101,7 @@ status_t CAsnMember::GetVarName(CMem *out)
         }
         name++;
     }
+    return OK;
 }
 
 bool CAsnMember::IsOptional()
