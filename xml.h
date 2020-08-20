@@ -14,6 +14,8 @@
 #include "xmlreader.h"
 #include "file.h"
 
+#define XML_STR(s) ((s)==NULL?"":(s))
+
 class CXmlNode{
 public:
     WEAK_REF_DEFINE();
