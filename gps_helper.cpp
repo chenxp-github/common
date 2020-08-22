@@ -65,7 +65,9 @@ status_t LatitudeToGpsString(double lat, CFileBase *out)
     int degs = (int)floor(lat);
     double s = lat - degs;
     double f = s *60;
-    out->Printf("%02d%.5f",degs,f);
+    int f_part1 = (int)floor(f);
+    int f_part2 = (int)((f - f_part1)*10000);
+    out->Printf("%02d%02d.%04d",degs,f_part1,f_part2);
     return OK;
 }
 
@@ -74,16 +76,9 @@ status_t LongitudeToGpsString(double lon, CFileBase *out)
     int degs = (int)floor(lon);
     double s = lon - degs;
     double f = s *60;
-    out->Printf("%03d%.5f",degs,f);
-    return OK;
-}
-
-status_t AltitudeToGpsString(double alt, CFileBase *out)
-{
-    int degs = (int)floor(alt);
-    double s = alt - degs;
-    double f = s *60;
-    out->Printf("%03d%.5f",degs,f);
+    int f_part1 = (int)floor(f);
+    int f_part2 = (int)((f - f_part1)*10000);
+    out->Printf("%03d%02d.%04d",degs,f_part1,f_part2);
     return OK;
 }
 
