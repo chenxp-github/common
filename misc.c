@@ -274,3 +274,42 @@ uint32_t bob_32bit_integer_hash(uint32_t a)
     a = (a^0xb55a4f09) ^ (a>>16); 
     return a;
 }
+
+int is_hex_char(char ch)
+{
+	return (ch >= 'a' && ch <= 'f')
+		|| (ch >= 'A' && ch <= 'F')
+		|| (ch >= '0' && ch <= '9');
+}
+
+int hex_str_to_bin(const char *shex, int len, uint8_t *out, int max)
+{
+	ASSERT(shex && out);
+
+    int s = 0;
+    
+	char buf[4];
+	int k = 0;
+    for(int i=0; i<len; i++ )   
+    {   
+		char ch = shex[i];
+		if(is_hex_char(ch))
+		{
+			buf[k++] = ch;
+			if(k == 2)
+			{
+                if(s < max)
+				{
+                    out[s++] = hex2dec_32(buf);
+                }
+                else
+                {
+                    break;
+                }                
+				k=0;
+			}
+		}
+    }   
+    
+	return s;
+}
