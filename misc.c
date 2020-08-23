@@ -284,13 +284,12 @@ int is_hex_char(char ch)
 
 int hex_str_to_bin(const char *shex, int len, uint8_t *out, int max)
 {
+	char buf[4];
+	int i,k = 0,s=0;
+	
 	ASSERT(shex && out);
 
-    int s = 0;
-    
-	char buf[4];
-	int k = 0;
-    for(int i=0; i<len; i++ )   
+    for(i=0; i<len; i++ )   
     {   
 		char ch = shex[i];
 		if(is_hex_char(ch))

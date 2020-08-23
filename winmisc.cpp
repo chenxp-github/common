@@ -466,6 +466,16 @@ status_t CWinMisc::IsMultiLineEditBox(HWND hwnd)
     return FALSE;   
 }
 
+status_t CWinMisc::IsEditBox(HWND hwnd)
+{
+    wchar_t buf[100];
+    ::GetClassNameW(hwnd,buf,100);
+    if(crt_stricmp_w(buf,L"EDIT") != 0)
+        return FALSE;
+    return TRUE;   
+}
+
+
 status_t CWinMisc::IsListBox(HWND hwnd)
 {
     wchar_t buf[100];

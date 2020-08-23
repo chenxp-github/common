@@ -35,6 +35,7 @@ public:
     static status_t TabFocus(HWND hwnd_parent,HWND *tab_list, int32_t max, MSG *msg);
     static status_t IsButton(HWND hwnd);
     static status_t IsMultiLineEditBox(HWND hwnd);
+	static status_t IsEditBox(HWND hwnd);
     static status_t IsListBox(HWND hwnd);
     static status_t IsListView(HWND hwnd);
     static status_t IsTreeView(HWND hwnd);
