@@ -77,6 +77,8 @@ public:
     status_t SetSystemTime();
     status_t SaveReadableString(CFileBase *out);
     status_t LoadReadableString(CFileBase *in);
+
+    status_t Clear();
 };
 
 #endif

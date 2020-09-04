@@ -397,3 +397,12 @@ status_t CCommonTime::LoadReadableString(CFileBase *in)
     
     return OK;
 }
+
+status_t CCommonTime::Clear()
+{
+    SAVE_WEAK_REF_ID(*this,w);
+    this->Destroy();
+    this->Init();
+    RESTORE_WEAK_REF_ID(*this,w);
+    return OK;
+}
