@@ -13,6 +13,7 @@ public:
     CMutex m_Mutex;
     int_ptr_t m_ThreadId;
 public:
+    status_t Wait(int n);
     int Schedule();
     status_t AddClosure(CClosure *closure,uint32_t delay);
     status_t AddClosureAndWait(CClosure *closure, int timeout, int *running);

@@ -217,3 +217,12 @@ bool CTaskRunner::IsRunning()
 {
     return m_ThreadId != 0;
 }
+
+status_t CTaskRunner::Wait(int n)
+{
+    while(GetLen() > n)
+    {
+        crt_msleep(1);
+    }
+    return OK;
+}
