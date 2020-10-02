@@ -128,14 +128,12 @@ static status_t asn_ia5_string_to_js_tree(ASN_TO_JS_TREE_PARAM_DEF)
     tmp.Init();
     tmp.SetRawBuf(str->buf,str->size,true);
     tmp.Seek(0);
-
-    char utf8[8];
-    while(!tmp.IsEnd())
+    
+    for(unsigned int i = 0; i < str->size; i++)
     {
-        tmp.Getc_Utf8(utf8);
-        out->Puts(utf8);
+        if(i > 0)out->Puts(" ");
+        out->Printf("%02x",str->buf[i]);
     }
-
     out->Printf("\",");
     out->Log("");
 
