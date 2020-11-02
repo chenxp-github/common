@@ -337,6 +337,18 @@ T *Find(T *key)
     return r->get();
 }
 
+int FindIndex(T *key)
+{
+    ASSERT(key);
+    CWeakPointer<T> wp;
+    wp.Init();
+    wp.WeakRef(key);
+    int ff = 0;
+    int index = this->BSearchPos(&wp,0,&ff);
+    if(ff)return index;
+    return -1;
+}
+
 status_t AutoClear()
 {
     for(int i = 0; i < GetLen(); i++)
@@ -350,6 +362,15 @@ status_t AutoClear()
     return OK;
 }
 
+status_t DelEntry(T *p)
+{
+    int index = this->FindIndex(p);
+    if(index >= 0) 
+    {
+        return this->DelElem(index);
+    }
+    return ERROR;
+}
 
 };
 
