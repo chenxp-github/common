@@ -13,6 +13,10 @@ class CJoystick
 {
 public:
 /*##Begin Members##*/
+public:
+public:
+    WEAK_REF_DEFINE();
+
 /*##End Members##*/
     int m_fd;
 public:
@@ -40,6 +44,7 @@ public:
 
     int Read(struct js_event *event);
     bool IsClosed();
+    status_t ClearCachedEvents();
 };
 
 #endif

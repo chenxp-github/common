@@ -15,6 +15,7 @@ CJoystick::~CJoystick()
 status_t CJoystick::InitBasic()
 {
 /*##Begin InitBasic##*/
+    WEAK_REF_CLEAR();
 /*##End InitBasic##*/
     m_fd = ERROR_FILE_HANDLE;
     return OK;
@@ -32,6 +33,7 @@ status_t CJoystick::Destroy()
 {
     this->Close();
 /*##Begin Destroy##*/
+    WEAK_REF_DESTROY();
 /*##End Destroy##*/
     this->InitBasic();
     return OK;
@@ -149,4 +151,15 @@ int CJoystick::Read(struct js_event *event)
         }
     }
     return i4_rd_bytes;
+}
+
+status_t CJoystick::ClearCachedEvents()
+{
+    struct js_event e;
+    for(int i=0; i < 10000; i++)
+    {
+        if(this->Read(&e) <= 0)
+            break;
+    }
+    return OK;
 }
