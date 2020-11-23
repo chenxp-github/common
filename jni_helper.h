@@ -99,6 +99,7 @@ do{\
 
 status_t GetStringArrayElements(JNIEnv *env, jobjectArray str_arr, CMemStk *out);
 jobjectArray BuildJavaStringArray(JNIEnv *env, CMemStk *arr);
+jobjectArray BuildJavaStringArray(JNIEnv *env, CMem **arr, int arr_len);
 jobjectArray BuildJavaStringArray(JNIEnv *env, CMem *arr, int arr_len);
 
 

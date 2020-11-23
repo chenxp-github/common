@@ -36,6 +36,26 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMemStk *arr)
 	return java_arr;
 }
 
+jobjectArray BuildJavaStringArray(JNIEnv *env, CMem **arr, int arr_len)
+{
+	ASSERT(env && arr);
+	jclass objClass = env->FindClass("java/lang/String");
+	ASSERT(objClass);
+	if(arr_len <= 0) return NULL;
+
+	jobjectArray java_arr = env->NewObjectArray(arr_len,objClass,0);
+
+	for(int i = 0; i < arr_len; i++)
+	{
+		CMem *p = arr[i];
+		ASSERT(p);
+		jstring jstr = env->NewStringUTF(p->CStr());
+		env->SetObjectArrayElement(java_arr, i,jstr);
+	}
+
+	return java_arr;
+}
+
 jobjectArray BuildJavaStringArray(JNIEnv *env, CMem *arr, int arr_len)
 {
 	ASSERT(env && arr);
@@ -54,6 +74,5 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMem *arr, int arr_len)
 
 	return java_arr;
 }
-
 
 
