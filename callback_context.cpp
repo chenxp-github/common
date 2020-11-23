@@ -1,5 +1,5 @@
 #include "callback_context.h"
-#include "xlog.h"
+#include "syslog.h"
 #include "mem_tool.h"
 
 CCallbackContext::CCallbackContext()
