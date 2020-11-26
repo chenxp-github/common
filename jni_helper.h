@@ -44,6 +44,8 @@ jobject create_java_##_name(JNIEnv* env,_class *ptr, bool is_weak)\
 	jni_obj->SetNativePointer(ptr,ptr->__weak_ref_context);\
 	jni_obj->SetIsWeak(is_weak);\
 	env->SetLongField(obj,id_obj,(jlong)jni_obj);\
+	env->DeleteLocalRef(class_##_name);\
+	env->DeleteLocalRef(obj);\
 	return obj;\
 }\
 
@@ -59,6 +61,7 @@ do{\
 	jni_obj->SetIsWeak(is_weak);\
 	jfieldID id_obj=(env)->GetFieldID(class_name,"__obj","J");\
 	env->SetLongField(java_obj,id_obj,(jlong)jni_obj);\
+	env->DeleteLocalRef(class_name);\
 }while(0)\
 
 #define BuildJavaObjectArray(env,arr,arr_len,cls_path,create_func,is_weak,ret) do\
@@ -75,7 +78,9 @@ do{\
 			env->SetObjectArrayElement(java_arr,i,jobj);\
 		}\
 		ret = java_arr;\
+		env->DeleteLocalRef(java_arr);\
 	}\
+	env->DeleteLocalRef(objClass);\
 }while(0)\
 
 #define GetNativeObjectArray(env, jarrObj,ctype, arr, arr_len,cls_path,get_func) do\
@@ -90,7 +95,9 @@ do{\
 		jobject jobj = env->GetObjectArrayElement(jarrObj,i);\
 		ctype *ptr = get_func(env,jobj);\
 		arr[i] = ptr;\
+		env->DeleteLocalRef(jobj);\
 	}\
+	env->DeleteLocalRef(objClass);\
 }while(0)\
 
 #define ReleaseNativeObjectArray(arr) do{\

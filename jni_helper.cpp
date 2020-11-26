@@ -26,13 +26,16 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMemStk *arr)
 	if(arr->GetLen() <= 0) return NULL;
 
 	jobjectArray java_arr = env->NewObjectArray(arr->GetLen(),objClass,0);
+	ASSERT(java_arr);
 
 	for(int i = 0; i < arr->GetLen(); i++)
 	{
 		CMem *p = arr->GetElem(i);
 		jstring jstr = env->NewStringUTF(p->CStr());
 		env->SetObjectArrayElement(java_arr, i,jstr);
+		env->DeleteLocalRef(jstr);
 	}
+	env->DeleteLocalRef(java_arr);
 	return java_arr;
 }
 
@@ -51,8 +54,9 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMem **arr, int arr_len)
 		ASSERT(p);
 		jstring jstr = env->NewStringUTF(p->CStr());
 		env->SetObjectArrayElement(java_arr, i,jstr);
+		env->DeleteLocalRef(jstr);
 	}
-
+	env->DeleteLocalRef(java_arr);
 	return java_arr;
 }
 
@@ -70,8 +74,9 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMem *arr, int arr_len)
 		CMem *p = &arr[i];
 		jstring jstr = env->NewStringUTF(p->CStr());
 		env->SetObjectArrayElement(java_arr, i,jstr);
+		env->DeleteLocalRef(jstr);
 	}
-
+	env->DeleteLocalRef(java_arr);
 	return java_arr;
 }
 
