@@ -32,6 +32,7 @@ public:
     status_t Put(const char *key, int val);
     status_t Put(const char *key, int64_t val);
     status_t Put(const char *key, const char *val);
+    status_t Put(const char *key, jobject val);
 
 };
 

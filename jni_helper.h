@@ -109,6 +109,8 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMemStk *arr);
 jobjectArray BuildJavaStringArray(JNIEnv *env, CMem **arr, int arr_len);
 jobjectArray BuildJavaStringArray(JNIEnv *env, CMem *arr, int arr_len);
 
+class CMainLoopContext;
+CMainLoopContext *GetMainLoopContext(JNIEnv* env);
 
 #endif
 

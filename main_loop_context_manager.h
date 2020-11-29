@@ -47,6 +47,9 @@ public:
     status_t InitBasic();
     status_t Init(int capacity=1024);
     status_t Destroy();
+
+    status_t Del(JNIEnv *env);
+    CMainLoopContext *Get(JNIEnv *env);
 };
 
 

@@ -17,6 +17,7 @@ status_t CMainLoopContext::InitBasic()
 /*##Begin InitBasic##*/
     this->m_TaskMgr.InitBasic();
     this->m_TaskRunner.InitBasic();
+    this->m_PeerGlobals.InitBasic();
 /*##End InitBasic##*/
     m_Env = NULL;
     return OK;
@@ -27,8 +28,9 @@ status_t CMainLoopContext::Init()
     this->InitBasic();
 /*##Begin Init##*/
     this->m_TaskMgr.Init();
-    this->m_TaskRunner.Init();
+    this->m_TaskRunner.Init();    
 /*##End Init##*/
+    this->m_PeerGlobals.Init(&m_TaskMgr);
     return OK;
 }
 
@@ -37,6 +39,7 @@ status_t CMainLoopContext::Destroy()
 /*##Begin Destroy##*/
     this->m_TaskMgr.Destroy();
     this->m_TaskRunner.Destroy();
+    this->m_PeerGlobals.Destroy();
 /*##End Destroy##*/
     this->InitBasic();
     return OK;
@@ -56,6 +59,13 @@ CTaskRunner* CMainLoopContext::GetTaskRunner()
 }
 /*@@End  Function GetTaskRunner@@*/
 
+
+/*@@Begin Function GetPeerGlobals@@*/
+CPeerGlobals* CMainLoopContext::GetPeerGlobals()
+{
+    return &m_PeerGlobals;
+}
+/*@@End  Function GetPeerGlobals@@*/
 /*@@ Insert Function Here @@*/
 status_t CMainLoopContext::SetJniEnv(JNIEnv *env)
 {
@@ -68,3 +78,9 @@ JNIEnv* CMainLoopContext::GetJniEnv()
 	return m_Env;
 }
 
+status_t CMainLoopContext::Schedule()
+{
+    m_TaskMgr.Schedule();
+    m_TaskRunner.Schedule();
+    return OK;
+}

@@ -310,4 +310,22 @@ bool CMainLoopContextManager::Equals(CMainLoopContext *hashentry1, CMainLoopCont
     return hashentry1->m_Env == hashentry2->m_Env;
 }
 
+status_t CMainLoopContextManager::Del(JNIEnv *env)
+{
+    ASSERT(env);
+
+    CMainLoopContext tmp;
+    tmp.Init();
+    tmp.SetJniEnv(env);
+    return this->Del(&tmp);
+}
+
+CMainLoopContext *CMainLoopContextManager::Get(JNIEnv *env)
+{
+    if(env == NULL) return NULL;    
+    CMainLoopContext tmp;
+    tmp.Init();
+    tmp.SetJniEnv(env);
+    return this->Get(&tmp);
+}
 

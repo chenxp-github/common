@@ -8,6 +8,7 @@
 #include "memfile.h"
 #include "taskmgr.h"
 #include "taskrunner.h"
+#include "peerglobals.h"
 
 class CMainLoopContext
 /*##Begin Bases##*/
@@ -17,6 +18,7 @@ class CMainLoopContext
 public:
     CTaskMgr m_TaskMgr;
     CTaskRunner m_TaskRunner;
+    CPeerGlobals m_PeerGlobals;
 /*##End Members##*/
     JNIEnv *m_Env;
 public:
@@ -30,12 +32,15 @@ public:
 /*##Begin Getter_H##*/
     CTaskMgr* GetTaskMgr();
     CTaskRunner* GetTaskRunner();
+    CPeerGlobals* GetPeerGlobals();
 /*##End Getter_H##*/
 /*##Begin Setter_H##*/
 /*##End Setter_H##*/
 
     status_t SetJniEnv(JNIEnv *env);
     JNIEnv* GetJniEnv();
+
+    status_t Schedule();
 };
 
 #endif

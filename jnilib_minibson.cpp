@@ -148,14 +148,22 @@ static jboolean minibson_getdocument(JNIEnv* _env,jobject _this_obj, jstring _na
     CMiniBson *_this = get_minibson(_env,_this_obj);
     ASSERT(_this);
 
-    const char *name = _env->GetStringUTFChars(_name,NULL);
-    ASSERT(name);
+    const char *name = NULL;
+    if(_name != NULL)
+	{
+		name = _env->GetStringUTFChars(_name,NULL);
+		ASSERT(name);
+	}
+
     CMiniBson *doc = get_minibson(_env,_doc);
     ASSERT(doc);
 
     jboolean _ret0 = _this->GetDocument(name,doc);
 
-    _env->ReleaseStringUTFChars(_name,name);
+    if(_name != NULL)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    }
 
     return _ret0;
 }
@@ -237,14 +245,22 @@ static jboolean minibson_getstring_v1(JNIEnv* _env,jobject _this_obj, jstring _n
     CMiniBson *_this = get_minibson(_env,_this_obj);
     ASSERT(_this);
 
-    const char *name = _env->GetStringUTFChars(_name,NULL);
-    ASSERT(name);
+    const char *name = NULL;
+    if(_name != NULL)
+	{
+		name = _env->GetStringUTFChars(_name,NULL);
+		ASSERT(name);
+	}
+
     CMem *str = get_mem(_env,_str);
     ASSERT(str);
 
     jboolean _ret0 = _this->GetString(name,str);
 
-    _env->ReleaseStringUTFChars(_name,name);
+    if(_name != NULL)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    }
 
     return _ret0;
 }
@@ -254,8 +270,12 @@ static jstring minibson_getstring_v2(JNIEnv* _env,jobject _this_obj, jstring _na
     CMiniBson *_this = get_minibson(_env,_this_obj);
     ASSERT(_this);
 
-    const char *name = _env->GetStringUTFChars(_name,NULL);
-    ASSERT(name);
+    const char *name = NULL;
+    if(_name != NULL)
+	{
+		name = _env->GetStringUTFChars(_name,NULL);
+		ASSERT(name);
+	}
 
     CMem mem;
     mem.Init();
@@ -264,8 +284,10 @@ static jstring minibson_getstring_v2(JNIEnv* _env,jobject _this_obj, jstring _na
 
     jstring ret0 = _env->NewStringUTF(mem.CStr());
 
-    _env->ReleaseStringUTFChars(_name,name);
-
+    if(_name != NULL)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    }
     return ret0;
 }
 
@@ -667,6 +689,191 @@ static jboolean minibson_putbinary_v4(JNIEnv* _env,jobject _this_obj, jobject _n
     return _ret0;
 }
 
+static jboolean minibson_putbinary_v5(JNIEnv* _env,jobject _this_obj, jstring _name, jshortArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+    int16_t *bin = (int16_t*)_env->GetShortArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(int16_t));
+
+    _env->ReleaseStringUTFChars(_name,name);
+    _env->ReleaseShortArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v6(JNIEnv* _env,jobject _this_obj, jobject _name, jshortArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    CMem *name = get_mem(_env,_name);
+    ASSERT(name);
+    int16_t *bin = (int16_t*)_env->GetShortArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(int16_t));
+
+    _env->ReleaseShortArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v7(JNIEnv* _env,jobject _this_obj, jstring _name, jintArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+    int32_t *bin = (int32_t*)_env->GetIntArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(int32_t));
+
+    _env->ReleaseStringUTFChars(_name,name);
+    _env->ReleaseIntArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v8(JNIEnv* _env,jobject _this_obj, jobject _name, jintArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    CMem *name = get_mem(_env,_name);
+    ASSERT(name);
+    int32_t *bin = (int32_t*)_env->GetIntArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(int32_t));
+
+    _env->ReleaseIntArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v9(JNIEnv* _env,jobject _this_obj, jstring _name, jlongArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+    int64_t *bin = (int64_t*)_env->GetLongArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(int64_t));
+
+    _env->ReleaseStringUTFChars(_name,name);
+    _env->ReleaseLongArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v10(JNIEnv* _env,jobject _this_obj, jobject _name, jlongArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    CMem *name = get_mem(_env,_name);
+    ASSERT(name);
+    int64_t *bin = (int64_t*)_env->GetLongArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(int64_t));
+
+    _env->ReleaseLongArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v11(JNIEnv* _env,jobject _this_obj, jstring _name, jfloatArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+    float *bin = (float*)_env->GetFloatArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(float));
+
+    _env->ReleaseStringUTFChars(_name,name);
+    _env->ReleaseFloatArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v12(JNIEnv* _env,jobject _this_obj, jobject _name, jfloatArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    CMem *name = get_mem(_env,_name);
+    ASSERT(name);
+    float *bin = (float*)_env->GetFloatArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(float));
+
+    _env->ReleaseFloatArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v13(JNIEnv* _env,jobject _this_obj, jstring _name, jdoubleArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+    double *bin = (double*)_env->GetDoubleArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(double));
+
+    _env->ReleaseStringUTFChars(_name,name);
+    _env->ReleaseDoubleArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
+static jboolean minibson_putbinary_v14(JNIEnv* _env,jobject _this_obj, jobject _name, jdoubleArray _bin)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    CMem *name = get_mem(_env,_name);
+    ASSERT(name);
+    double *bin = (double*)_env->GetDoubleArrayElements(_bin,0);
+    ASSERT(bin);
+    int bin_len = _env->GetArrayLength(_bin);
+
+    jboolean _ret0 = _this->PutBinary(name,bin,bin_len*sizeof(double));
+
+    _env->ReleaseDoubleArrayElements(_bin,bin,0);
+
+    return _ret0;
+}
+
 static jboolean minibson_putstring_v1(JNIEnv* _env,jobject _this_obj, jstring _name, jstring _str)
 {
     CMiniBson *_this = get_minibson(_env,_this_obj);
@@ -977,6 +1184,220 @@ static jboolean minibson_peeknext(JNIEnv* _env,jobject _this_obj, jobject _out)
     return _ret0;
 }
 
+static jbyteArray minibson_getbinarybytearray(JNIEnv* _env,jobject _this_obj, jstring _name)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+
+    CMem bin;
+    bin.Init();
+    _this->GetBinary(name,&bin);
+    if(bin.GetSize() <= 0)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    	return NULL;
+    }
+
+    int8_t* _ret0 = (int8_t*)bin.GetRawBuf();
+    ASSERT(_ret0);
+    int _ret0_len = bin.GetSize()/sizeof(int8_t);
+
+    jbyteArray ret0 = _env->NewByteArray(_ret0_len);
+    _env->SetByteArrayRegion(ret0,0,_ret0_len,_ret0);
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return ret0;
+}
+
+static jshortArray minibson_getbinaryshortarray(JNIEnv* _env,jobject _this_obj, jstring _name)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+
+    CMem bin;
+    bin.Init();
+    _this->GetBinary(name,&bin);
+    if(bin.GetSize() <= 0)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    	return NULL;
+    }
+
+    int16_t* _ret0 = (int16_t*)bin.GetRawBuf();
+    ASSERT(_ret0);
+    int _ret0_len = bin.GetSize()/sizeof(int16_t);
+
+    jshortArray ret0 = _env->NewShortArray(_ret0_len);
+    _env->SetShortArrayRegion(ret0,0,_ret0_len,_ret0);
+
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return ret0;
+}
+
+static jintArray minibson_getbinaryintarray(JNIEnv* _env,jobject _this_obj, jstring _name)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+
+
+    CMem bin;
+    bin.Init();
+    _this->GetBinary(name,&bin);
+    if(bin.GetSize() <= 0)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    	return NULL;
+    }
+
+    int32_t* _ret0 = (int32_t*)bin.GetRawBuf();
+    ASSERT(_ret0);
+    int _ret0_len = bin.GetSize()/sizeof(int32_t);
+
+    jintArray ret0 = _env->NewIntArray(_ret0_len);
+    _env->SetIntArrayRegion(ret0,0,_ret0_len,_ret0);
+
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return ret0;
+}
+
+static jlongArray minibson_getbinarylongarray(JNIEnv* _env,jobject _this_obj, jstring _name)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+
+    CMem bin;
+    bin.Init();
+    _this->GetBinary(name,&bin);
+    if(bin.GetSize() <= 0)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    	return NULL;
+    }
+
+    int64_t* _ret0 = (int64_t*)bin.GetRawBuf();
+    ASSERT(_ret0);
+    int _ret0_len = bin.GetSize()/sizeof(int64_t);
+
+    jlongArray ret0 = _env->NewLongArray(_ret0_len);
+    _env->SetLongArrayRegion(ret0,0,_ret0_len,_ret0);
+
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return ret0;
+}
+
+static jfloatArray minibson_getbinaryfloatarray(JNIEnv* _env,jobject _this_obj, jstring _name)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+
+    CMem bin;
+    bin.Init();
+    _this->GetBinary(name,&bin);
+    if(bin.GetSize() <= 0)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    	return NULL;
+    }
+
+    float* _ret0 = (float*)bin.GetRawBuf();
+    ASSERT(_ret0);
+    int _ret0_len = bin.GetSize()/sizeof(float);
+
+
+    jfloatArray ret0 = _env->NewFloatArray(_ret0_len);
+    _env->SetFloatArrayRegion(ret0,0,_ret0_len,_ret0);
+
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return ret0;
+}
+
+static jdoubleArray minibson_getbinarydoublearray(JNIEnv* _env,jobject _this_obj, jstring _name)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+
+    CMem bin;
+    bin.Init();
+    _this->GetBinary(name,&bin);
+    if(bin.GetSize() <= 0)
+    {
+    	_env->ReleaseStringUTFChars(_name,name);
+    	return NULL;
+    }
+
+    double* _ret0 = (double*)bin.GetRawBuf();
+    ASSERT(_ret0);
+    int _ret0_len = bin.GetSize()/sizeof(double);
+
+    jdoubleArray ret0 = _env->NewDoubleArray(_ret0_len);
+    _env->SetDoubleArrayRegion(ret0,0,_ret0_len,_ret0);
+
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return ret0;
+}
+
+static jboolean minibson_putfloat(JNIEnv* _env,jobject _this_obj, jstring _name, jfloat _f)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+    float f = (float)_f;
+
+    jboolean _ret0 = _this->PutDouble(name,f);
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return _ret0;
+}
+
+static jfloat minibson_getfloat(JNIEnv* _env,jobject _this_obj, jstring _name)
+{
+    CMiniBson *_this = get_minibson(_env,_this_obj);
+    ASSERT(_this);
+
+    const char *name = _env->GetStringUTFChars(_name,NULL);
+    ASSERT(name);
+
+    double d = 0;
+    _this->GetDouble(name,&d);
+    jfloat _ret0 =(float)d;
+
+    _env->ReleaseStringUTFChars(_name,name);
+
+    return _ret0;
+}
+
 static const JNINativeMethod minibson_native_methods[]={
     {"_gc","()I",(void*)minibson__gc},
     {"_new","()Z",(void*)minibson__new},
@@ -1022,6 +1443,16 @@ static const JNINativeMethod minibson_native_methods[]={
     {"putBinary","(Lcom/jni/common/CMem;Lcom/jni/common/CFileBase;)Z",(void*)minibson_putbinary_v2},
     {"putBinary","(Ljava/lang/String;[B)Z",(void*)minibson_putbinary_v3},
     {"putBinary","(Lcom/jni/common/CMem;[B)Z",(void*)minibson_putbinary_v4},
+    {"putBinary","(Ljava/lang/String;[S)Z",(void*)minibson_putbinary_v5},
+    {"putBinary","(Lcom/jni/common/CMem;[S)Z",(void*)minibson_putbinary_v6},
+    {"putBinary","(Ljava/lang/String;[I)Z",(void*)minibson_putbinary_v7},
+    {"putBinary","(Lcom/jni/common/CMem;[I)Z",(void*)minibson_putbinary_v8},
+    {"putBinary","(Ljava/lang/String;[J)Z",(void*)minibson_putbinary_v9},
+    {"putBinary","(Lcom/jni/common/CMem;[J)Z",(void*)minibson_putbinary_v10},
+    {"putBinary","(Ljava/lang/String;[F)Z",(void*)minibson_putbinary_v11},
+    {"putBinary","(Lcom/jni/common/CMem;[F)Z",(void*)minibson_putbinary_v12},
+    {"putBinary","(Ljava/lang/String;[D)Z",(void*)minibson_putbinary_v13},
+    {"putBinary","(Lcom/jni/common/CMem;[D)Z",(void*)minibson_putbinary_v14},
     {"putString","(Ljava/lang/String;Ljava/lang/String;)Z",(void*)minibson_putstring_v1},
     {"putString","(Ljava/lang/String;Lcom/jni/common/CMem;)Z",(void*)minibson_putstring_v2},
     {"putString","(Lcom/jni/common/CMem;Lcom/jni/common/CMem;)Z",(void*)minibson_putstring_v3},
@@ -1042,6 +1473,14 @@ static const JNINativeMethod minibson_native_methods[]={
     {"endArray","(JI)Z",(void*)minibson_endarray},
     {"getArray","(Ljava/lang/String;Lcom/jni/common/CMiniBson;)I",(void*)minibson_getarray},
     {"peekNext","(Lcom/jni/common/CStream;)Z",(void*)minibson_peeknext},
+    {"getBinaryByteArray","(Ljava/lang/String;)[B",(void*)minibson_getbinarybytearray},
+    {"getBinaryShortArray","(Ljava/lang/String;)[S",(void*)minibson_getbinaryshortarray},
+    {"getBinaryIntArray","(Ljava/lang/String;)[I",(void*)minibson_getbinaryintarray},
+    {"getBinaryLongArray","(Ljava/lang/String;)[J",(void*)minibson_getbinarylongarray},
+    {"getBinaryFloatArray","(Ljava/lang/String;)[F",(void*)minibson_getbinaryfloatarray},
+    {"getBinaryDoubleArray","(Ljava/lang/String;)[D",(void*)minibson_getbinarydoublearray},
+    {"putFloat","(Ljava/lang/String;F)Z",(void*)minibson_putfloat},
+    {"getFloat","(Ljava/lang/String;)F",(void*)minibson_getfloat},
 };
 status_t register_minibson_native_methods(JNIEnv* env)
 {

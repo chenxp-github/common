@@ -137,3 +137,13 @@ status_t CJavaCallback::Put(const char *key, const char *val)
 	m_env->DeleteLocalRef(jval);
 	return OK;
 }
+
+status_t CJavaCallback::Put(const char *key, jobject val)
+{
+    ASSERT(key && val);
+    jstring jkey = m_env->NewStringUTF(key);
+    m_env->CallObjectMethod(m_callback_obj,m_put_method_id,jkey,val);
+    m_env->DeleteLocalRef(jkey);
+    return OK;
+}
+
