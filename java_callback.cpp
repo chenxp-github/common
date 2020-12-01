@@ -40,7 +40,6 @@ status_t CJavaCallback::Init(JNIEnv *env, jobject cb_obj)
 	ASSERT(m_run_method_id);
 	m_clear_method_id = env->GetMethodID(m_callback_class,"clear", "()V");
 	ASSERT(m_clear_method_id);
-
     return OK;
 }
 

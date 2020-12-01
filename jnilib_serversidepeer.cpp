@@ -244,18 +244,24 @@ static jboolean serversidepeer_sendmessage_v2(JNIEnv* _env,jobject _this_obj, js
 
 static jboolean serversidepeer_setonmessage(JNIEnv* _env,jobject _this_obj, jobject _onmessage_callback_obj)
 {    
+	CJniObject *jni_obj = CJniObject::GetJniObject(_env,_this_obj);
+	ASSERT(jni_obj);
     CServerSidePeer *_this = get_serversidepeer(_env,_this_obj);
     ASSERT(_this);
 
     BEGIN_CLOSURE_FUNC(on_message)
     {
         CLOSURE_PARAM_INT(event,0);
-        CLOSURE_PARAM_PTR(jobject,_onmessage_callback_obj,11);
-        CLOSURE_PARAM_PTR(JNIEnv*,_env,12);
+        CLOSURE_PARAM_PTR(CJniObject*,jni_obj,11);
+
+        CCallbackContext *context = jni_obj->GetCallback(0);
+        ASSERT(context);
 
         CJavaCallback cb;
-        cb.Init(_env,_onmessage_callback_obj);
+        cb.Init(context->GetEnv(),context->GetObj());
         cb.Put("event",event);
+
+        CMiniBson tmp_bson;
 
         if(event == PEER_EVENT_GOT_MESSAGE)
         {
@@ -268,6 +274,8 @@ static jboolean serversidepeer_setonmessage(JNIEnv* _env,jobject _this_obj, jobj
             cb.Put("callback_id",msg->GetCallbackId());
             cb.Put("flags",(int)msg->GetFlags());
             cb.Put("body_type",(int)msg->GetBodyType());
+            cb.Put("msg_type",(int)msg->GetMessageType());
+
             if(msg->GetBodyType() == CPeerMessage::STRING)
             {
                 CMem *val = msg->GetBody();
@@ -276,10 +284,9 @@ static jboolean serversidepeer_setonmessage(JNIEnv* _env,jobject _this_obj, jobj
             }
             else
             {
-                CMiniBson tmp_bson;
                 tmp_bson.Init();
                 tmp_bson.LoadRawBuf(msg->GetBody());                
-                cb.Put("body",create_java_minibson(_env,&tmp_bson,true));				
+                cb.Put("body",create_java_minibson(context->GetEnv(),&tmp_bson,true));
             }
         }
 
@@ -289,9 +296,10 @@ static jboolean serversidepeer_setonmessage(JNIEnv* _env,jobject _this_obj, jobj
     }
     END_CLOSURE_FUNC(on_message);
     
+    //must use a weak reference to ref _onmessage_callback_obj
+    jni_obj->SetCallback(0,_env,_onmessage_callback_obj,"run");
     _this->Callback()->SetFunc(on_message);
-    _this->Callback()->SetParamPointer(11,_onmessage_callback_obj);    
-    _this->Callback()->SetParamPointer(12,_env);
+    _this->Callback()->SetParamPointer(11,jni_obj);
     return OK;
 }
 
