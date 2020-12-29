@@ -25,8 +25,19 @@ status_t CJniObject::Init()
 }
 status_t CJniObject::Destroy()
 {
-    DEL_ARRAY(m_callback_contexts);
 	this->InitBasic();
+	return OK;
+}
+//java gc may occur in another thread,
+//so must use env of that thread to clear JniObject
+status_t CJniObject::Clear(JNIEnv* env)
+{
+	ASSERT(env);
+	if(m_callback_contexts)
+	{
+		m_callback_contexts->SetEnv(env);
+		DEL_ARRAY(m_callback_contexts);
+	}
 	return OK;
 }
 

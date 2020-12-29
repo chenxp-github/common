@@ -42,6 +42,7 @@ public:
 
 	status_t SetCallback(int index, JNIEnv* env, jobject cb_obj, const char *cb_name);
 	CCallbackContext* GetCallback(int index);
+	status_t Clear(JNIEnv* env);
 };
 
 #endif

@@ -21,9 +21,10 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMemStk *arr)
 {
 	ASSERT(env && arr);
 
+	if(arr->GetLen() <= 0) return NULL;
+
 	jclass objClass = env->FindClass("java/lang/String");
 	ASSERT(objClass);
-	if(arr->GetLen() <= 0) return NULL;
 
 	jobjectArray java_arr = env->NewObjectArray(arr->GetLen(),objClass,0);
 	ASSERT(java_arr);
@@ -36,15 +37,17 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMemStk *arr)
 		env->DeleteLocalRef(jstr);
 	}
 	env->DeleteLocalRef(java_arr);
+	env->DeleteLocalRef(objClass);
 	return java_arr;
 }
 
 jobjectArray BuildJavaStringArray(JNIEnv *env, CMem **arr, int arr_len)
 {
 	ASSERT(env && arr);
+	if(arr_len <= 0) return NULL;
+
 	jclass objClass = env->FindClass("java/lang/String");
 	ASSERT(objClass);
-	if(arr_len <= 0) return NULL;
 
 	jobjectArray java_arr = env->NewObjectArray(arr_len,objClass,0);
 
@@ -57,16 +60,17 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMem **arr, int arr_len)
 		env->DeleteLocalRef(jstr);
 	}
 	env->DeleteLocalRef(java_arr);
+	env->DeleteLocalRef(objClass);
 	return java_arr;
 }
 
 jobjectArray BuildJavaStringArray(JNIEnv *env, CMem *arr, int arr_len)
 {
 	ASSERT(env && arr);
-	jclass objClass = env->FindClass("java/lang/String");
-	ASSERT(objClass);
 	if(arr_len <= 0) return NULL;
 
+	jclass objClass = env->FindClass("java/lang/String");
+	ASSERT(objClass);
 	jobjectArray java_arr = env->NewObjectArray(arr_len,objClass,0);
 
 	for(int i = 0; i < arr_len; i++)
@@ -77,6 +81,7 @@ jobjectArray BuildJavaStringArray(JNIEnv *env, CMem *arr, int arr_len)
 		env->DeleteLocalRef(jstr);
 	}
 	env->DeleteLocalRef(java_arr);
+    env->DeleteLocalRef(objClass);
 	return java_arr;
 }
 

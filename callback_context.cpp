@@ -86,6 +86,8 @@ JNIEnv* CCallbackContext::GetEnv()
 /*@@Begin Function GetObj@@*/
 jobject CCallbackContext::GetObj()
 {
+    if(!this->IsValid())
+        return NULL;
     return m_obj;
 }
 /*@@End  Function GetObj@@*/

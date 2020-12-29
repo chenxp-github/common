@@ -21,6 +21,7 @@ static jint _name##__gc(JNIEnv* env,jobject obj)\
 		_class *obj = (_class*)jni_obj->GetNativePointer();\
 		DEL(obj);\
 	}\
+	jni_obj->Clear(env);\
 	DEL(jni_obj);\
 	CJniObject::ClearJniObject(env,obj);\
 	return OK;\
@@ -32,7 +33,7 @@ jobject create_java_##_name(JNIEnv* env,_class *ptr, bool is_weak)\
 	ASSERT(ptr);\
 	jclass class_##_name = env->FindClass(THIS_JAVA_CLASS_PATH);\
 	ASSERT(class_##_name);\
-	jmethodID m_id = env->GetMethodID(class_##_name, "__dummy", "()V");\
+	jmethodID m_id = env->GetMethodID(class_##_name, "<init>", "()V");\
 	ASSERT(m_id);\
 	jobject obj = env->NewObject(class_##_name,m_id);\
 	ASSERT(obj);\
@@ -45,7 +46,6 @@ jobject create_java_##_name(JNIEnv* env,_class *ptr, bool is_weak)\
 	jni_obj->SetIsWeak(is_weak);\
 	env->SetLongField(obj,id_obj,(jlong)jni_obj);\
 	env->DeleteLocalRef(class_##_name);\
-	env->DeleteLocalRef(obj);\
 	return obj;\
 }\
 
