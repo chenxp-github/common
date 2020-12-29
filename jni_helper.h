@@ -86,8 +86,6 @@ do{\
 #define GetNativeObjectArray(env, jarrObj,ctype, arr, arr_len,cls_path,get_func) do\
 {\
 	ASSERT(env && jarrObj);\
-	jclass objClass = env->FindClass(cls_path);\
-	ASSERT(objClass);\
 	arr_len = env->GetArrayLength(jarrObj);\
 	MALLOC(arr,ctype*,arr_len);\
 	for(int i = 0; i < arr_len; i++)\
@@ -97,7 +95,6 @@ do{\
 		arr[i] = ptr;\
 		env->DeleteLocalRef(jobj);\
 	}\
-	env->DeleteLocalRef(objClass);\
 }while(0)\
 
 #define ReleaseNativeObjectArray(arr) do{\

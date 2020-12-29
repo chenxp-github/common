@@ -1,12 +1,6 @@
-package com.cvtest.common;
+package com.jni.common;
 
 import java.util.HashMap;
-
-import android.util.Log;
-
-import com.jni.common.CMessagePeer;
-import com.jni.common.CMiniBson;
-import com.jni.common.CServerSidePeer;
 
 public abstract class PeerServiceBase {
 	public final static int  BODY_TYPE_STRING = 0x01<<4;
@@ -29,7 +23,8 @@ public abstract class PeerServiceBase {
 	private CServerSidePeer m_server_side_peer;
 	private CMessagePeer m_client_side_peer;
 	private boolean m_is_server_side = false;
-	private CallbackMap m_callback_map = new CallbackMap();	 
+	private CallbackMap m_callback_map = new CallbackMap();
+	private Callback m_OnMessage;
 	String m_dest_peer_name = "";
 	
 	public class Message{
@@ -82,8 +77,8 @@ public abstract class PeerServiceBase {
 	public void start()
 	{
 		final PeerServiceBase self = this;
-		
-		Callback on_msg_cb = new Callback(){
+
+		m_OnMessage = new Callback(){
 			public Object run() {
 				self.innerOnMessage(this.params);
 				return null;
@@ -96,12 +91,12 @@ public abstract class PeerServiceBase {
 			this.m_server_side_peer.start();
 	        this.m_server_side_peer.startFetchMessageTask();
 	        this.m_server_side_peer.setCanFetchMessage(true);
-	        this.m_server_side_peer.setOnMessage(on_msg_cb);
+	        this.m_server_side_peer.setOnMessage(m_OnMessage);
 		}
 		else
 		{
 			this.m_client_side_peer.start();
-			this.m_client_side_peer.setOnMessage(on_msg_cb);
+			this.m_client_side_peer.setOnMessage(m_OnMessage);
 		}
 	}
 	

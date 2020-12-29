@@ -1,4 +1,4 @@
-package com.cvtest.common;
+package com.jni.common;
 
 import java.util.HashMap;
 import java.util.Iterator;

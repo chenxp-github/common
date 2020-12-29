@@ -1,9 +1,6 @@
 /*##Begin Header##*/
-package com.cvtest.common;
+package com.jni.common;
 
-import com.jni.common.CMiniBson;
-import com.jni.common.CMem;
-import com.jni.common.CFileBase;
 /*##End Header##*/
 
 public class RpcCallContext{

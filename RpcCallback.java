@@ -1,6 +1,4 @@
-package com.cvtest.common;
-
-import com.jni.common.CMiniBson;
+package com.jni.common;
 
 public abstract class RpcCallback extends Callback{
 	public RpcParamBase ret;

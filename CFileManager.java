@@ -1,7 +1,5 @@
 package com.jni.common;
 
-import com.cvtest.common.Callback;
-
 public class CFileManager{
 	
 	public static boolean SearchDir(String dir, boolean recursive, Callback onsearchdir_callback_obj)

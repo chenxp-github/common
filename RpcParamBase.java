@@ -1,7 +1,4 @@
-package com.cvtest.common;
-
-import com.jni.common.CMem;
-import com.jni.common.CMiniBson;
+package com.jni.common;
 
 public abstract class RpcParamBase {
 	public abstract boolean saveBson(CMiniBson bson);

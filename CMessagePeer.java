@@ -1,7 +1,5 @@
 package com.jni.common;
 
-import com.cvtest.common.Callback;
-
 public class CMessagePeer{
     private long __obj = 0;
     private void __dummy(){}

@@ -1,8 +1,7 @@
-package com.cvtest.common;
+package com.jni.common;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 public class NativeBridge {    
 	public boolean need_msg_loop = true;

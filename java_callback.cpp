@@ -32,7 +32,9 @@ status_t CJavaCallback::Init(JNIEnv *env, jobject cb_obj)
     m_env = env;
     m_callback_obj = cb_obj;
 
-    m_callback_class = env->GetObjectClass(m_callback_obj);
+    jclass _class = env->GetObjectClass(m_callback_obj);
+	ASSERT(_class);
+	m_callback_class = (jclass)env->NewGlobalRef(_class);
 	ASSERT(m_callback_class);
 	m_put_method_id = env->GetMethodID(m_callback_class,"put", "(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;");
 	ASSERT(m_put_method_id);
@@ -47,7 +49,7 @@ status_t CJavaCallback::Destroy()
 {
 	if(m_env && m_callback_class)
 	{
-		m_env->DeleteLocalRef(m_callback_class);
+		m_env->DeleteGlobalRef(m_callback_class);
 		m_callback_class = NULL;
 	}
 

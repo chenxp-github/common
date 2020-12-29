@@ -1,4 +1,4 @@
-package com.cvtest.common;
+package com.jni.common;
 
 public class Consts {
 	
