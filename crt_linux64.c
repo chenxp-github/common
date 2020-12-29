@@ -1,5 +1,5 @@
 #include <fcntl.h>
-#include "crt_linux.h"
+#include "crt_linux64.h"
 #include "syslog.h"
 
 void *crt_memset(void *buf, int_ptr_t n, int_ptr_t size)
