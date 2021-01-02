@@ -3,6 +3,7 @@
 
 #include "minibson.h"
 /*##Begin Inlcudes##*/
+#include "xml.h"
 /*##End Inlcudes##*/
 #include "mem.h"
 #include "memfile.h"
@@ -70,15 +71,22 @@ public:
     status_t LoadBson(CFileBase *_file);
 /*##End Bson##*/
 
+/*##Begin XML##*/
+    status_t LoadXml(CXmlNode *_root);
+    status_t SaveXml(CFileBase *_xml);
+    status_t LoadXml(const char *fn, const char *path);
+    status_t SaveXml(const char *fn, const char *node_name);
+/*##End XML##*/
     status_t SetNow();
-    status_t Set(uint64_t tm);
-    uint64_t GetLong();
+    status_t Set(int64_t tm);
+    int64_t GetLong();
 
     status_t SetSystemTime();
     status_t SaveReadableString(CFileBase *out);
     status_t LoadReadableString(CFileBase *in);
 
     status_t Clear();
+    status_t Forward(int64_t msec);
 };
 
 #endif

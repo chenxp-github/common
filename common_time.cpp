@@ -254,6 +254,23 @@ status_t CCommonTime::LoadBson(CFileBase *_file)
 }
 /*@@End  Function LoadBson_2@@*/
 
+status_t CCommonTime::LoadXml(CXmlNode *_root)
+{
+    ASSERT(_root);
+    CMemFile *value = _root->GetValue();
+    ASSERT(value);
+    this->LoadReadableString(value);
+    return OK;
+}
+
+status_t CCommonTime::SaveXml(CFileBase *_xml)
+{
+    ASSERT(_xml);
+    LOCAL_MEM(str);
+    this->SaveReadableString(&str);
+    _xml->Log("%s",str.CStr());
+    return OK;
+}
 
 /*@@Begin Function GetWeekDay@@*/
 int CCommonTime::GetWeekDay()
@@ -286,7 +303,7 @@ status_t CCommonTime::SetYearDay(int _year_day)
 /*@@End  Function SetYearDay@@*/
 /*@@ Insert Function Here @@*/
 
-status_t CCommonTime::Set(uint64_t lt)
+status_t CCommonTime::Set(int64_t lt)
 {
     struct tm *local;
     time_t t = (time_t)(lt/1000);
@@ -310,28 +327,29 @@ status_t CCommonTime::SetNow()
 #if HAVE_WINDOWS_H
     SYSTEMTIME st;
     GetLocalTime(&st);
-	uint64_t lt = time(NULL);
+	int64_t lt = time(NULL);
 	this->Set(lt*1000);
 	this->SetMsec(st.wMilliseconds);	
 #else
     struct timeval tv;
     gettimeofday(&tv,NULL);
-    this->Set(((uint64_t)tv.tv_sec)*1000);
+    this->Set(((int64_t)tv.tv_sec)*1000);
     this->SetMsec(tv.tv_usec/1000);
 #endif    
     return OK;
 }
 
-uint64_t CCommonTime::GetLong()
+int64_t CCommonTime::GetLong()
 {
     struct tm local;
+    memset(&local,0,sizeof(local));
     local.tm_year=m_year-YEAR0;
     local.tm_mon=m_month-1;
     local.tm_mday=m_day;
     local.tm_hour=m_hour;
     local.tm_min=m_minute;
     local.tm_sec=m_second;
-    uint64_t t = mktime(&local);
+    int64_t t = mktime(&local);
     return t*1000+m_msec;
 }
 
@@ -350,7 +368,7 @@ status_t CCommonTime::SetSystemTime()
     SetLocalTime(&st);
 #else    
     struct timeval tv;
-    uint64_t lval = this->GetLong();
+    int64_t lval = this->GetLong();
     tv.tv_sec = lval / 1000;
     tv.tv_usec = (m_msec*1000);
     settimeofday(&tv, NULL);
@@ -405,4 +423,10 @@ status_t CCommonTime::Clear()
     this->Init();
     RESTORE_WEAK_REF_ID(*this,w);
     return OK;
+}
+
+status_t CCommonTime::Forward(int64_t msec)
+{
+    int64_t l = this->GetLong();
+    return this->Set(l+msec);
 }
