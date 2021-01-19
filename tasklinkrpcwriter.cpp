@@ -97,6 +97,7 @@ status_t CTaskLinkRpcWriter::Run(uint32_t interval)
             this->mStep = STEP_PREPARE_PACKAGE;
             mCallback->SetParamPointer(1,this);
             mCallback->Run(EVENT_PACKAGE_SEND_OK);
+            this->GetTaskMgr()->TurboOn();
             return OK;
         }
     }
@@ -188,6 +189,8 @@ status_t CTaskLinkRpcWriter::SendPackage(int cmd, CFileBase *header, CFileBase *
     this->iHeaderData = header;
     this->iData = data;
 
+    this->CancelSleep();
+    this->GetTaskMgr()->TurboOn();
     return OK;
 }
 
@@ -225,6 +228,9 @@ status_t CTaskLinkRpcWriter::WriteImmediately()
     if(!iSocketRwer->IsConnected())
         return ERROR;
 
+    this->CancelSleep();
+    this->GetTaskMgr()->TurboOn();
+
     for(int i = 0; i < 4; i++)
     {
         if(!this->IsDead())
@@ -232,5 +238,6 @@ status_t CTaskLinkRpcWriter::WriteImmediately()
             this->Run(0);
         }
     }
+   
     return OK;
 }
