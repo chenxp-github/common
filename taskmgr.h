@@ -132,6 +132,7 @@ public:
     uint32_t mLastRunTime;
     uint32_t mFlags;
 public:
+    status_t TurboOn();
     status_t CancelSleep();
     status_t SetFlags(uint32_t flags);
     bool IsInvalidInterval(uint32_t interval);

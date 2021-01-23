@@ -180,6 +180,11 @@ status_t CTask::SetFlags(uint32_t flags)
     mFlags = flags;
     return OK;
 }
+status_t CTask::TurboOn()
+{
+    ASSERT(GetTaskMgr());
+    return GetTaskMgr()->TurboOn();
+}
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
