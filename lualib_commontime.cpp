@@ -241,6 +241,28 @@ static status_t commontime_setsystemtime(lua_State *L)
     return 1;
 }
 
+static status_t commontime_tostring(lua_State *L)
+{
+    CCommonTime *pcommontime = get_commontime(L,1);
+    ASSERT(pcommontime);
+    LOCAL_MEM(mem);
+    pcommontime->SaveReadableString(&mem);    
+    lua_pushstring(L,mem.CStr());
+    return 1;
+}
+
+static status_t commontime_loadstring(lua_State *L)
+{
+    CCommonTime *pcommontime = get_commontime(L,1);
+    ASSERT(pcommontime);
+    const char* tm_str = (const char*)lua_tostring(L,2);
+    ASSERT(tm_str);
+    CMem mem(tm_str);
+    status_t ret0 = pcommontime->LoadReadableString(&mem);
+    lua_pushboolean(L,ret0);
+    return 1;
+}
+
 /****************************************************/
 static const luaL_Reg commontime_funcs_[] = {
     {"__gc",commontime_gc_},
@@ -269,6 +291,8 @@ static const luaL_Reg commontime_funcs_[] = {
     {"Set",commontime_set},
     {"GetLong",commontime_getlong},
     {"SetSystemTime",commontime_setsystemtime},
+    {"ToString",commontime_tostring},
+    {"LoadString",commontime_loadstring},    
     {NULL,NULL},
 };
 

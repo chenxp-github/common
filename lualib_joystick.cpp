@@ -191,7 +191,7 @@ static status_t joystick_seteventhandler(lua_State *L)
     CTaskMgr *taskmgr = how_to_get_global_taskmgr(L);
     ASSERT(taskmgr);
 
-    CTaskTimer *pt = CTaskTimer::NewTimer(taskmgr,10,false);
+    CTaskTimer *pt = CTaskTimer::NewTimer(taskmgr,1,false);
     pt->Start();
     pt->Callback()->SetFunc(read_joystick);    
 

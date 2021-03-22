@@ -257,7 +257,7 @@ status_t CCommonTime::LoadBson(CFileBase *_file)
 status_t CCommonTime::LoadXml(CXmlNode *_root)
 {
     ASSERT(_root);
-    CMemFile *value = _root->GetValue();
+    CMem *value = _root->GetValue();
     ASSERT(value);
     this->LoadReadableString(value);
     return OK;
