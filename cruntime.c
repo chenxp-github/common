@@ -19,3 +19,8 @@
 #include "platform/crt_android.c"
 #endif
 
+/////////////////////////////////////////////////////////////
+#if _ANDROID64_
+#include "cc936.c"
+#include "platform/crt_android64.c"
+#endif

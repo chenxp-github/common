@@ -2,7 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
 #include "WndSplit.h"
 #include "mem_tool.h"
 #include "memdc.h"

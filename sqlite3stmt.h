@@ -15,11 +15,13 @@ public:
     int ColumnBytes(int col);
     double ColumnDouble(int col);
     int ColumnInt(int col);
+    int64_t ColumnInt64(int col);
     status_t ColumnText(int col,CMem *out);
     status_t BindBlob(int index, const void *blob, int size);
     status_t BindBlob(int index, CMem *blob);
     status_t BindDouble(int index, double val);
     status_t BindInt(int index, int val);
+    status_t BindInt64(int index, int64_t val);
     status_t BindText(int index, const char *text);
     status_t BindText(int index, CMem *text);
     status_t BindText(int index, const char  *text, int encoding);

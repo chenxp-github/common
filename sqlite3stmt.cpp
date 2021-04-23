@@ -82,7 +82,7 @@ status_t CSQLite3Stmt::BindText(int index, const char  *text, int encoding)
 status_t CSQLite3Stmt::BindText(int index,CMem *text, int encoding)
 {
     ASSERT(text);
-    AUTO_LOCAL_MEM(tmp,text->StrLen());
+    AUTO_LOCAL_MEM(tmp,text->GetSize()*2);
     CEncoder::EncodingConvert(encoding,ENCODING_UTF8,text,&tmp);
     return sqlite3_bind_text(this->mStmt,index,tmp.CStr(),tmp.StrLen(),NULL) == SQLITE_OK;
 }
@@ -98,6 +98,11 @@ status_t CSQLite3Stmt::BindInt(int index, int val)
     return sqlite3_bind_int(this->mStmt, index, val) == SQLITE_OK;
 }   
 
+status_t CSQLite3Stmt::BindInt64(int index, int64_t val)
+{
+    return sqlite3_bind_int64(this->mStmt, index, val) == SQLITE_OK;
+}
+
 status_t CSQLite3Stmt::BindDouble(int index, double val)
 {
     return sqlite3_bind_double(this->mStmt, index, val) == SQLITE_OK;
@@ -105,8 +110,11 @@ status_t CSQLite3Stmt::BindDouble(int index, double val)
 
 status_t CSQLite3Stmt::BindBlob(int index, const void *blob, int size)
 {
-    ASSERT(blob);
-    return sqlite3_bind_blob(this->mStmt,index,blob,size,NULL) == SQLITE_OK;
+    //ASSERT(blob);
+    if(blob == NULL)
+        return sqlite3_bind_blob(this->mStmt,index,NULL,0,NULL) == SQLITE_OK;
+    else
+        return sqlite3_bind_blob(this->mStmt,index,blob,size,NULL) == SQLITE_OK;
 }
 
 status_t CSQLite3Stmt::BindBlob(int index, CMem *blob)
@@ -133,6 +141,11 @@ int CSQLite3Stmt::ColumnInt(int col)
     return sqlite3_column_int(this->mStmt,col);
 }
 
+int64_t CSQLite3Stmt::ColumnInt64(int col)
+{
+    return sqlite3_column_int64(this->mStmt,col);
+}
+
 double CSQLite3Stmt::ColumnDouble(int col)
 {
     return sqlite3_column_double(this->mStmt,col);
@@ -148,6 +161,7 @@ status_t CSQLite3Stmt::ColumnBlob(int col, CMem *out)
     ASSERT(out);
     out->SetSize(0);
     int size = this->ColumnBytes(col);
+    if(size <= 0)return OK;
     ASSERT(size > 0 && size <= out->GetMaxSize());
     const void *buf;
     buf = sqlite3_column_blob(this->mStmt,col);
