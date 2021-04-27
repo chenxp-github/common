@@ -145,7 +145,7 @@ status_t CTaskRunner::AddClosureAndWait(CClosure *closure, int timeout, int *run
             XLOG(LOG_MODULE_COMMON,LOG_LEVEL_ERROR,
                 "taskrunner: wait closure too long time.");
         }        
-        crt_msleep(10);
+        crt_msleep(1);
     }
 
     if(!is_breaked)
