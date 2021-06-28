@@ -599,7 +599,7 @@ status_t CGpsParser::ParseSingleLine(CMem *line, CClosure *closure)
     if(line->C(0) != '$')
         return ERROR;
 
-    closure->SetParamPointer(2,&line);
+    closure->SetParamPointer(2,line);
     CGpsData head;
     head.Init();
     CGpsParser::ParseHead(line,&head);
